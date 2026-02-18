@@ -1,0 +1,130 @@
+appId: com.zenny.mdviewer
+productName: Zenny
+copyright: Copyright © 2026
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - package.json
+  - "!node_modules/**/*"
+  - "!src/**/*"
+  - "!docs/**/*"
+  - "!.vscode/**/*"
+  - "!*.md"
+  - "!*.config.*"
+  - "!tsconfig.json"
+
+extraMetadata:
+  main: dist/main/index.js
+
+# macOS Configuration
+mac:
+  category: public.app-category.productivity
+  icon: build/icons/icon.icns
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+    - target: zip
+      arch:
+        - x64
+        - arm64
+  hardenedRuntime: false
+  gatekeeperAssess: false
+
+dmg:
+  title: ${productName} ${version}
+  icon: build/icons/icon.icns
+  iconSize: 96
+  contents:
+    - x: 160
+      y: 220
+    - x: 380
+      y: 220
+      type: link
+      path: /Applications
+  window:
+    width: 540
+    height: 380
+
+# Windows Configuration
+win:
+  icon: build/icons/icon.ico
+  signAndEditExecutable: false
+  target:
+    - target: nsis
+      arch:
+        - x64
+        - ia32
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  allowElevation: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: ${productName}
+  perMachine: false
+  artifactName: ${productName}-Setup-${version}.${ext}
+  installerIcon: build/icons/icon.ico
+  uninstallerIcon: build/icons/icon.ico
+
+# Linux Configuration
+linux:
+  icon: build/icons/
+  category: Office
+  target:
+    - target: AppImage
+      arch:
+        - x64
+    - target: deb
+      arch:
+        - x64
+    - target: rpm
+      arch:
+        - x64
+  executableName: zenny
+  desktop:
+    entry:
+      Name: Zenny
+      Comment: Markdown viewer and editor
+      Categories: Office;TextEditor;Utility;
+      MimeType: text/markdown;text/x-markdown;
+      Terminal: false
+
+appImage:
+  artifactName: ${productName}-${version}.${ext}
+
+deb:
+  depends:
+    - gconf2
+    - gconf-service
+    - libnotify4
+    - libappindicator1
+    - libxtst6
+    - libnss3
+
+# File Associations
+fileAssociations:
+  - ext: md
+    name: Markdown File
+    description: Markdown Document
+    role: Editor
+  - ext: markdown
+    name: Markdown Document
+    description: Markdown Document
+    role: Editor
+
+# Build Configuration
+asar: true
+asarUnpack:
+  - "**/*.node"
+
+compression: normal
+
+# Publish configuration (disabled for now)
+publish: null
