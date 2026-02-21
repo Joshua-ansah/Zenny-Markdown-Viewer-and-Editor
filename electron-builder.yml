@@ -20,10 +20,14 @@ files:
 extraMetadata:
   main: dist/main/index.js
 
+extraResources:
+  - from: build/icon.png
+    to: icon.png
+
 # macOS Configuration
 mac:
   category: public.app-category.productivity
-  icon: build/icons/icon.icns
+  icon: build/icon.icns
   target:
     - target: dmg
       arch:
@@ -38,7 +42,7 @@ mac:
 
 dmg:
   title: ${productName} ${version}
-  icon: build/icons/icon.icns
+  icon: build/icon.icns
   iconSize: 96
   contents:
     - x: 160
@@ -53,13 +57,12 @@ dmg:
 
 # Windows Configuration
 win:
-  icon: build/icons/icon.ico
+  icon: build/icon.ico
   signAndEditExecutable: false
   target:
-    - target: nsis
+    - target: zip
       arch:
         - x64
-        - ia32
 
 nsis:
   oneClick: false
@@ -69,9 +72,17 @@ nsis:
   createStartMenuShortcut: true
   shortcutName: ${productName}
   perMachine: false
+  installerLanguages:
+    - en_US
   artifactName: ${productName}-Setup-${version}.${ext}
-  installerIcon: build/icons/icon.ico
-  uninstallerIcon: build/icons/icon.ico
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  deleteAppDataOnUninstall: false
+  runAfterFinish: true
+  differentialPackage: false
+
+portable:
+  artifactName: ${productName}-Portable-${version}.${ext}
 
 # Linux Configuration
 linux:

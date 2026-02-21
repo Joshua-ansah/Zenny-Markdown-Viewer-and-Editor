@@ -6,6 +6,9 @@ interface ViewContextValue {
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
   toggleView: () => void;
+  isTreeVisible: boolean;
+  setTreeVisible: (visible: boolean) => void;
+  toggleTreeVisibility: () => void;
 }
 
 const ViewContext = createContext<ViewContextValue | undefined>(undefined);
@@ -16,6 +19,7 @@ interface ViewProviderProps {
 
 export function ViewProvider({ children }: ViewProviderProps) {
   const [viewMode, setViewModeState] = useState<ViewMode>('split');
+  const [isTreeVisible, setIsTreeVisible] = useState<boolean>(true);
 
   const setViewMode = useCallback((mode: ViewMode) => {
     setViewModeState(mode);
@@ -25,6 +29,27 @@ export function ViewProvider({ children }: ViewProviderProps) {
     } catch (error) {
       console.error('Failed to save view mode preference:', error);
     }
+  }, []);
+
+  const setTreeVisible = useCallback((visible: boolean) => {
+    setIsTreeVisible(visible);
+    try {
+      localStorage.setItem('zenny-tree-visible', String(visible));
+    } catch (error) {
+      console.error('Failed to save tree visibility preference:', error);
+    }
+  }, []);
+
+  const toggleTreeVisibility = useCallback(() => {
+    setIsTreeVisible((current) => {
+      const newValue = !current;
+      try {
+        localStorage.setItem('zenny-tree-visible', String(newValue));
+      } catch (error) {
+        console.error('Failed to save tree visibility preference:', error);
+      }
+      return newValue;
+    });
   }, []);
 
   const toggleView = useCallback(() => {
@@ -44,15 +69,20 @@ export function ViewProvider({ children }: ViewProviderProps) {
     });
   }, []);
 
-  // Load saved preference on mount
+  // Load saved preferences on mount
   React.useEffect(() => {
     try {
-      const saved = localStorage.getItem('zenny-view-mode');
-      if (saved && (saved === 'editor' || saved === 'preview' || saved === 'split')) {
-        setViewModeState(saved);
+      const savedViewMode = localStorage.getItem('zenny-view-mode');
+      if (savedViewMode && (savedViewMode === 'editor' || savedViewMode === 'preview' || savedViewMode === 'split')) {
+        setViewModeState(savedViewMode);
+      }
+
+      const savedTreeVisible = localStorage.getItem('zenny-tree-visible');
+      if (savedTreeVisible !== null) {
+        setIsTreeVisible(savedTreeVisible === 'true');
       }
     } catch (error) {
-      console.error('Failed to load view mode preference:', error);
+      console.error('Failed to load preferences:', error);
     }
   }, []);
 
@@ -60,6 +90,9 @@ export function ViewProvider({ children }: ViewProviderProps) {
     viewMode,
     setViewMode,
     toggleView,
+    isTreeVisible,
+    setTreeVisible,
+    toggleTreeVisibility,
   };
 
   return <ViewContext.Provider value={value}>{children}</ViewContext.Provider>;

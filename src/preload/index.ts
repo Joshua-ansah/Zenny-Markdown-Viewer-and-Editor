@@ -7,6 +7,9 @@ import type {
   PDFExportResult,
   ViewMode,
   RecentFilesResult,
+  ResolvePathOptions,
+  ResolvePathResult,
+  ReadDirectoryResult,
 } from '../shared/types/ipc';
 
 // Expose protected methods that allow the renderer process to use
@@ -26,6 +29,10 @@ const electronAPI = {
   },
 
   // PDF export
+  showPDFExportDialog: (): Promise<{ choice: number | null }> => {
+    return ipcRenderer.invoke(IPC_CHANNELS.PDF_EXPORT_DIALOG);
+  },
+
   exportToPDF: (options: PDFExportOptions): Promise<PDFExportResult> => {
     return ipcRenderer.invoke(IPC_CHANNELS.PDF_EXPORT, options);
   },
@@ -50,6 +57,16 @@ const electronAPI = {
 
   clearRecentFiles: (): Promise<RecentFilesResult> => {
     return ipcRenderer.invoke(IPC_CHANNELS.FILE_CLEAR_RECENT);
+  },
+
+  // Path resolution
+  resolvePath: (options: ResolvePathOptions): Promise<ResolvePathResult> => {
+    return ipcRenderer.invoke(IPC_CHANNELS.APP_RESOLVE_PATH, options);
+  },
+
+  // Directory reading
+  readDirectory: (dirPath: string): Promise<ReadDirectoryResult> => {
+    return ipcRenderer.invoke(IPC_CHANNELS.APP_READ_DIRECTORY, dirPath);
   },
 
   // Menu event listeners (main -> renderer)

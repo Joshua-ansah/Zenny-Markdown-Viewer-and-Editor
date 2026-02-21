@@ -10,11 +10,14 @@ export const IPC_CHANNELS = {
 
   // PDF export
   PDF_EXPORT: 'pdf:export',
+  PDF_EXPORT_DIALOG: 'pdf:exportDialog',
 
   // App operations
   APP_GET_PATH: 'app:getPath',
   APP_SET_TITLE: 'app:setTitle',
   APP_OPEN_EXTERNAL: 'app:openExternal',
+  APP_RESOLVE_PATH: 'app:resolvePath',
+  APP_READ_DIRECTORY: 'app:readDirectory',
 
   // Menu events (main -> renderer)
   MENU_TOGGLE_VIEW: 'menu:toggleView',

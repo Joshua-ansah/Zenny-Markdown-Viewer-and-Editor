@@ -6,9 +6,24 @@ import styles from './Toolbar.module.css';
 interface ToolbarProps {
   onFormat?: (type: string) => void;
   onExportPDF?: () => void;
+  canGoBack?: boolean;
+  canGoForward?: boolean;
+  onGoBack?: () => void;
+  onGoForward?: () => void;
+  isTreeVisible?: boolean;
+  onToggleTree?: () => void;
 }
 
-export default function Toolbar({ onFormat, onExportPDF }: ToolbarProps) {
+export default function Toolbar({
+  onFormat,
+  onExportPDF,
+  canGoBack = false,
+  canGoForward = false,
+  onGoBack,
+  onGoForward,
+  isTreeVisible = true,
+  onToggleTree,
+}: ToolbarProps) {
   const { fileName, isDirty, recentFiles, openFile, saveFile, newFile, openRecentFile, clearRecentFiles } = useFile();
   const { viewMode, setViewMode } = useView();
   const [showRecentDropdown, setShowRecentDropdown] = useState(false);
@@ -48,6 +63,34 @@ export default function Toolbar({ onFormat, onExportPDF }: ToolbarProps) {
 
   return (
     <div className={styles.toolbar}>
+      {/* Navigation */}
+      <div className={styles.section}>
+        <button
+          onClick={onToggleTree}
+          className={`${styles.button} ${isTreeVisible ? styles.active : ''}`}
+          title={isTreeVisible ? "Hide File Tree" : "Show File Tree"}
+        >
+          {isTreeVisible ? '◀ 📁' : '📁 ▶'}
+        </button>
+        <button
+          onClick={onGoBack}
+          className={styles.button}
+          disabled={!canGoBack}
+          title="Back (Alt+Left)"
+        >
+          ←
+        </button>
+        <button
+          onClick={onGoForward}
+          className={styles.button}
+          disabled={!canGoForward}
+          title="Forward (Alt+Right)"
+        >
+          →
+        </button>
+      </div>
+      <div className={styles.divider} />
+
       {/* File Operations */}
       <div className={styles.section}>
         <button onClick={newFile} className={styles.button} title="New File (Ctrl+N)">

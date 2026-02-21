@@ -224,3 +224,15 @@
   border-left: 4px solid #d1242f;
   border-radius: 4px;
 }
+
+/* Find feature highlights */
+:global(.find-highlight) {
+  background-color: rgba(255, 213, 0, 0.4);
+  border-radius: 2px;
+}
+
+:global(.find-highlight-active) {
+  background-color: rgba(255, 150, 0, 0.6);
+  border-radius: 2px;
+  outline: 2px solid #e8a000;
+}
